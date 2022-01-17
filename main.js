@@ -1,3 +1,6 @@
+const scripts = require("./scripts");
+
+
 // uses strict mode so strings are not coerced, variables are not hoisted, etc... 
 'use strict';
 
@@ -11,23 +14,26 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-// the function that will be called by the unit test below
-const rockPaperScissors = (hand1, hand2) => {
-
-  // Write code here
-  // Use the unit test to see what is expected
-
-}
 
 // the first function called in the program to get an input from the user
 // to run the function use the command: node main.js
 // to close it ctrl + C
 function getPrompt() {
-  rl.question('hand1: ', (answer1) => {
-    rl.question('hand2: ', (answer2) => {
-      console.log( rockPaperScissors(answer1, answer2) );
-      getPrompt();
-    });
+  rl.question("Choose 1 or 2 players: ", (players) => {
+    switch (players) {
+      case '1' || 'one':
+        rl.question('hand1: ', (hand1) => {
+          console.log( scripts.onePlayerGame(hand1) );
+          getPrompt();
+        });
+      case '2' || 'two':
+        rl.question('hand1: ', (hand1) => {
+          rl.question('hand2: ', (hand2) => {
+            console.log( scripts.twoPlayerGame(hand1, hand2) );
+            getPrompt();
+          });
+        });
+    }
   });
 }
 
@@ -37,21 +43,21 @@ function getPrompt() {
 if (typeof describe === 'function') {
 
   // most are notes for human eyes to read, but essentially passes in inputs then compares if the function you built returns the expected output.
-  describe('#rockPaperScissors()', () => {
+  describe('#twoPlayerGame()', () => {
     it('should detect a tie', () => {
-      assert.equal(rockPaperScissors('rock', 'rock'), "It's a tie!");
-      assert.equal(rockPaperScissors('paper', 'paper'), "It's a tie!");
-      assert.equal(rockPaperScissors('scissors', 'scissors'), "It's a tie!");
+      assert.equal(twoPlayerGame('rock', 'rock'), "It's a tie!");
+      assert.equal(twoPlayerGame('paper', 'paper'), "It's a tie!");
+      assert.equal(twoPlayerGame('scissors', 'scissors'), "It's a tie!");
     });
     it('should detect which hand won', () => {
-      assert.equal(rockPaperScissors('rock', 'paper'), "Hand two wins!");
-      assert.equal(rockPaperScissors('paper', 'scissors'), "Hand two wins!");
-      assert.equal(rockPaperScissors('rock', 'scissors'), "Hand one wins!");
+      assert.equal(twoPlayerGame('rock', 'paper'), "Hand two wins!");
+      assert.equal(twoPlayerGame('paper', 'scissors'), "Hand two wins!");
+      assert.equal(twoPlayerGame('rock', 'scissors'), "Hand one wins!");
     });
     it('should scrub input to ensure lowercase with "trim"ed whitepace', () => {
-      assert.equal(rockPaperScissors('rOcK', ' paper '), "Hand two wins!");
-      assert.equal(rockPaperScissors('Paper', 'SCISSORS'), "Hand two wins!");
-      assert.equal(rockPaperScissors('rock ', 'sCiSsOrs'), "Hand one wins!");
+      assert.equal(twoPlayerGame('rOcK', ' paper '), "Hand two wins!");
+      assert.equal(twoPlayerGame('Paper', 'SCISSORS'), "Hand two wins!");
+      assert.equal(twoPlayerGame('rock ', 'sCiSsOrs'), "Hand one wins!");
     });
   });
 } else {
